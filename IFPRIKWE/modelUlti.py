@@ -9,7 +9,8 @@ import torch.optim as optim
 import math
 
 class modelUlti:
-    def __init__(self, net, gpu=True):
+    def __init__(self, net, gpu=False):
+        print(gpu)
         self.gpu = gpu
         self.net = net
         self.optimizer = optim.Adam(self.net.parameters())
@@ -37,23 +38,30 @@ class modelUlti:
         else:
             self.net.eval()
 
-        if batchGen.cudainputType:
-            cudainputType = batchGen.cudainputType
+        if hasattr(batchGen, 'tensorinputType'):
+            tensorinputType = batchGen.tensorinputType
         else:
-            cudainputType = torch.cuda.LongTensor
+            if self.gpu:
+                tensorinputType = torch.cuda.LongTensor
+            else:
+                tensorinputType = torch.LongTensor
 
-        if batchGen.cudalabelType:
-            cudalabelType = batchGen.cudalabelType
+        if hasattr(batchGen, 'tensorlabelType'):
+            tensorlabelType = batchGen.tensorlabelType
         else:
-            cudalabelType = torch.cuda.LongTensor
+            if self.gpu:
+                tensorlabelType = torch.cuda.LongTensor
+            else:
+                tensorlabelType = torch.LongTensor
 
         for input_tensor, label in batchGen:
             print("processing batch", i, end='\r')
             if self.gpu:
-                label = label.type(cudalabelType)
-                input_tensor = input_tensor.type(cudainputType)
+                label = label.type(tensorlabelType)
+                input_tensor = input_tensor.type(tensorinputType)
                 label.cuda()
                 input_tensor.cuda()
+
             y, attw=self.net(input_tensor)
             if train:
                 #print(y.shape, label.shape)

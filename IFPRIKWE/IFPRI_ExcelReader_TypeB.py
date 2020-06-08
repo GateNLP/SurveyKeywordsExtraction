@@ -15,12 +15,15 @@ class IFPRI_ExcelReader_TypeB(IFPRIReader):
         self.gpu = gpu
         if elmoConfig:
             from .models import ElmoEmbedding
-            self.cudainputType = torch.cuda.FloatTensor
-            self.cudalabelType = torch.cuda.FloatTensor
             self.elmoEmbd = ElmoEmbedding(elmoConfig)
             self.elmoEmbd.eval()
             if gpu:
+                self.tensorinputType = torch.cuda.FloatTensor
+                self.tensorlabelType = torch.cuda.FloatTensor
                 self.elmoEmbd.cuda()
+            else:
+                self.tensorinputType = torch.FloatTensor
+                self.tensorlabelType = torch.FloatTensor
 
 
     def readQuestions(self, excel_file, sheetName):
