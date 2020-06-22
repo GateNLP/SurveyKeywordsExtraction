@@ -107,6 +107,12 @@ if __name__ == "__main__":
     parser.add_argument("--stopwords", help="file to stop words")
     parser.add_argument("--excelType", default='typeB', help="excelType")
     parser.add_argument("--gpu", default=False, action='store_true', help="use gpu in training")
+
+    parser.add_argument("--target_field", default='PO_0009010', help="target field")
+    parser.add_argument("--question_field", default='Survey term', help="Survey term")
+    parser.add_argument("--term_field", default='Term', help="Term")
+    parser.add_argument("--options_field", default='Options', help="Options")
+    parser.add_argument("--sheetId", default=0, type=int, help="sheetName")
     args = parser.parse_args()
     script_path = os.path.abspath(__file__)
     parent = os.path.dirname(script_path)
@@ -136,7 +142,7 @@ if __name__ == "__main__":
 
     if args.excelType == 'typeB':
         from IFPRIKWE import IFPRI_ExcelReader_TypeB
-        questionReader = IFPRI_ExcelReader_TypeB(args.inputxls, gpu=args.gpu, sheetName=0)
+        questionReader = IFPRI_ExcelReader_TypeB(args.inputxls, gpu=args.gpu, sheetName=args.sheetId, target_field=args.target_field, question_field=args.question_field, term_field=args.term_field, option_field=args.options_field)
     elif args.excelType == 'typeA':
         from IFPRIKWE import IFPRI_ExcelReader_TypeA
         questionReader = IFPRI_ExcelReader_TypeA(args.inputxls)
