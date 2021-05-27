@@ -20,6 +20,7 @@ if __name__ == "__main__":
     parser.add_argument("--gpu", default=False, action='store_true', help="use gpu in training")
     parser.add_argument("--num_epoches", type=int, default=10, help="num epoches")
     parser.add_argument("--model", default="irri", help="model, default irri, models: irri, qsclass")
+    parser.add_argument("--output", default="", help="model output path")
 
     args = parser.parse_args()
     training_file = args.trainingFile
